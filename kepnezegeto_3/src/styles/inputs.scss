@@ -1,0 +1,94 @@
+/*
+nagyon fontos, hogy valaminek elé van írva ez a %-jel, akkor majd tudjuk másik class-oknál ezt @extend-elni és megkapják azt a tulajdonságot 
+ami itt van a %-ban 
+
+még nagyon fontos, hogy inputnál a :focus kell, egy button-nél viszont :
+*/
+
+%input:focus {
+    outline: 0; /*hogy ne legyen rajta border, amikor :focus-ban van*/
+}
+
+.input-sm {
+    padding: 5px 8px;
+}
+
+.input-md {
+    padding: 10px 14px;
+}
+
+.input-lg {
+    padding: 15px 20px;
+}
+
+.brown-bordered-btn, .white-btn, .black-btn, .text-input {
+    @extend %input:focus;
+}
+
+.text-input {
+    background-color: map-get($colors, "light-grey");
+    border: 1px solid #d0d0d0;
+    padding: 8px 15px;
+    font-size: 20px;
+}
+
+.black-btn {
+    background-color: black;
+    color: map-get($colors, "light-brown");
+    border: 1px solid transparent;
+    transition: all 0.5s ease; 
+    /*
+    és akkor, ha megadunk neki egy :hover-t, akkor nem egyből megy át olyanba, ami ott meg van adva, hanem ilyen transition-val 
+    */
+}
+
+.black-btn:hover {
+    background-color: map-get($colors, "light-brown");
+    color: black;
+}
+
+.brown-bordered-btn {
+    border: 2px solid map-get($colors, "light-brown");
+    background-color: transparent;
+    text-transform: uppercase;
+}
+
+.brown-bordered-btn:hover {
+    background-color: map-get($colors, "light-brown");
+    color: white;
+}
+
+/*
+Contact-hoz itt csináljuk az input mezőket 
+*/
+
+.input {
+    @extend %input;
+}
+
+@each $key, $value in $colors {
+    .input-#{$key} {
+        border: 2px solid map-get($colors, "light-grey");
+        background-color: white;
+        border-radius: 4px;
+
+        &:focus {
+            outline: 0;
+            border: 2px solid $value;
+        }
+    }
+
+    .btn-#{$key} {
+        background-color:$value;
+        border: 2px solid darken($value);
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+    }
+
+    &:active {
+        outline: 0;
+        border: 2px solid darken($value, 25%);
+        background-color: darken($value, 15%);
+    }
+}

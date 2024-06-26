@@ -1,0 +1,226 @@
+@use 'sass:math';
+@include mapMixin($spacings, "gap", grid-gap);
+
+@for $i from 2 through 12 {
+    .grid-col-#{$i} {
+        display:grid;
+        grid-template-columns: repeat($i, 1fr);
+
+        @media screen and (max-width:map-get($sizes, "lg")) {
+            $fr:math.ceil(math.div($i, 2));
+
+            @if($i%2 == 0 or $i%3 != 0) {
+                grid-template-columns: repeat($fr, 1fr);
+            } @else if($i%3 == 0 and $fr%3 == 0) {
+                grid-template-columns: repeat($fr, 1fr);
+            }
+        }
+
+        @media screen and (max-width:map-get($sizes, "md")) {
+            $fr:math.ceil(math.div($i, 3));
+
+            @if($i%2 == 0 or $i%3 != 0) { 
+                grid-template-columns: repeat($fr, 1fr);
+            } @else {
+                @if($i%3 == 0 and $fr%3 == 0) {
+                    grid-template-columns: repeat($fr, 1fr);
+                }
+            }
+        }
+
+        @media screen and (max-width:map-get($sizes, "sm")) {
+            $fr:math.ceil(math.div($i, 4));
+
+            @if($i%2 == 0 or $i%3 != 0) {
+                grid-template-columns: repeat($fr, 1fr);
+            } @else {
+                @if($i%3 == 0 and $fr%3 == 0) {
+                    grid-template-columns: repeat($fr, 1fr);
+                }
+            }
+        }
+
+        @media screen and (max-width:map-get($sizes, "xs")) {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+/*
+bootstrap-es grid rendszer 
+
+Ez úgy volt bootstrap-ben, hogy az lg-s 
+megnézni a bootstrap grid-rendszert!!! 
+
+                Extra small <768px	Small>=768px	Medium>=992px	Large>=1200px
+Class prefix	.col-xs-	        .col-sm-	    .col-md-	    .col-lg-
+Suitable for	Phones	            Tablets	        Small Laptops	Laptops & Desktops
+Container width	None (auto)	        750px	        970px	        1170px
+Column width	Auto	            ~62px	        ~81px	        ~97px
+
+Ahhoz, hogy ez müködjön egy row van megadva a tároló div-nek!!! 
+->
+<div class="container">
+  <div class="row">
+    <div class="col-*-*"></div>
+    <div class="col-*-*"></div>
+  </div>
+  <div class="row">
+    <div class="col-*-*"></div>
+    <div class="col-*-*"></div>
+    <div class="col-*-*"></div>
+  </div>
+  <div class="row">
+    ...
+  </div>
+</div>
+
+Azért, mert ez teszi lehetővé, hogy egymás mellett legyenek 
+és row flex lesz , de viszont flex-wrap: wrap
+*/
+
+.grid {
+    display: grid;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+/*
+wrap, ha nem fér ki, akkor bedobja egymás alá, különben ha no-wrap-en van, akkor az az alapbeállítás és addig nyomja őket összes, ameddig tudja 
+és ez így van a grid-nél is ezért kell sok media query-t csinálni 
+
+de ehhez van köze a bootstrap-nek, hogy ne kelljen annyit és a flex-wrap: wrap miatt ledobja őket!!! 
+*/
+
+@for $i from 1 through 12 {
+    .col-lg-#{$i} {
+        width: calc(100%/12*#{$i})!important;
+    }
+
+    .col-md-#{$i} {
+        width: calc(100%/12*#{$i});
+    }
+
+    .col-sm-#{$i} {
+        width: calc(100%/12*#{$i});
+    }
+
+    .col-xs-#{$i} {
+        width: calc(100%/12*#{$i});
+    }
+}
+
+@media screen and (max-width: map-get($sizes, "lg")) {
+    @for $i from 1 through 12 {
+        .col-lg-#{$i} {
+            width: 100%!important;
+        }
+    }
+
+    @for $i from 1 through 12 {
+        .col-md-#{$i} {
+            width: calc(100%/12*#{$i})!important;
+        }
+    }
+}
+
+/*
+tehát lg-nél a width az 100% lesz 
+width: calc(100%/12*#{$i})!important;
+ez itt nem grid-ként van megoldva!!!! 
+A bootstrap grid rendszer az 12 részre osztja horizontálisan a látható, rendelkezésre álló szélességet!!! 
+és ezt úgy oldjuk meg, hogy meghívunk egy calc() függvényt 
+
+És itt azt mondjuk a calc()-nak, hogy a 100%-ot, a rendelkezésre álló terület 100%-át, ami valamennyi, nem tudjuk, hogy mennyi
+elosztjuk 12-vel és megszorozzuk az i-vel és az i, az 1-től 12-ig megy, mert lehet 1/12, 2/12-ed 
+->
+        .col-md-#{$i} {
+            width: calc(100%/12*#{$i})!important;
+        }
+
+Mondjuk van a szélesség, ami 1080px, elosztjuk ezt 12-vel és, hogyha mondjuk ez col-lg-5, akkor ez a szélesség 450px lesz 
+de ezt ő automatikusan kiszámolja
+
+de mondjuk, hogyha csak 720px van, tehát nem lg hanem md-s a dolog, akkor azt osztja majd el 12-vel és azt szorozza meg 5-vel, ami csak 300
+
+és azt meg, hogy hol megy be 100%-ba, azt meg itt határozzuk meg 
+@media screen and (max-width: map-get($sizes, "lg")) {
+    @for $i from 1 through 12 {
+        .col-lg-#{$i} {
+            width: 100%!important;
+        }
+    }
+
+hogy az lg-nél már bemegy 100%-ba 
+map-get($sizes, "lg")
+ugye az lg-nél az lg -> .col-lg-#{$i}  az már bemegy 100%-ba, tehát az lg szélességnél 
+az md az megkapja ezt 
+->
+    @for $i from 1 through 12 {
+        .col-md-#{$i} {
+            width: calc(100%/12*#{$i})!important;
+        }
+
+és ez important lesz, hogy ne tudja semmi felülírni!! 
+
+Az md-nél pedig az md-k mennek be szélesség 100%-ba 
+->
+*/
+
+@media screen and (max-width: map-get($sizes, "md")) {
+    @for $i from 1 through 12 {
+        .col-md-#{$i} {
+            width: 100%!important;
+        }
+
+    @for $i from 1 through 12 {
+        .col-sm-#{$i}  {
+            width: calc(100%/12*#{$i})!important;
+        }
+    }
+    }
+}
+
+//és akkor itt megjelenik az sm, az sm-nél meg sm megy be 100%-ba 
+
+@media screen and (max-width: map-get($sizes, "sm")) {
+    @for $i from 1 through 12 {
+        .col-sm-#{$i} {
+            width: 100%!important;
+        }
+    }
+
+    @for $i from 1 through 12 {
+        .col-xs-#{$i} {
+            width: calc(100%/12*#{$i})!important;
+        }
+    }
+}
+
+/*
+Az xs, az meg mindig megmarad 
+-> 
+    @for $i from 1 through 12 {
+        .col-xs-#{$i} {
+            width: calc(100%/12*#{$i})!important;
+        }
+    }
+
+Ez a nagyon kicsi készülékeken, ennek nem számít, hogy milyen széles a rendelkezésre álló terület, ez mindig megmarad egymás mellett 
+mert vannak olyan elrendezések ahol nem kell, hogy bemenjen egymás alá, mert annyira pici, hogy direkt úgy számolod, hogy ne menjen be 
+és gyakorlatilag ez az ami itt müködik!!!! 
+*/
+
+@for $i from 2 through 12 {
+    .grid-col-#{$i} {
+        display: grid;
+        grid-template-columns: repeat($i, 1fr);
+    }
+
+    .grid-row-#{$i} {
+        display: grid;
+        grid-template-rows: repeat($i, 1fr);
+    }
+}

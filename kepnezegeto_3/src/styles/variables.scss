@@ -1,0 +1,54 @@
+$colors:(
+    "primary": #5d5f71,
+    "primary-lighter": #7f829a,
+    "primary-darker": #3e404b,
+    "secondary": #bf8b85,
+    "secondary-lighter": #edada5,
+    "secondary-darker": #916a66,
+    "light-grey": #efefef,
+    "mid-grey": #cccccc,
+    "dark-grey": #3b3b3b,
+    "black": #000000,
+    "white": #ffffff,
+    "success": #1bb458,
+    "danger": #de000f,
+    "warning": #ffae00
+);
+
+$sizes:(
+    "xs": 640px,
+    "sm": 720px,
+    "md": 960px,
+    "lg": 1080px,
+    "xl": 1280px
+);
+
+$spacings:(
+    "xs": 3px,
+    "sm": 5px,
+    "md": 10px,
+    "lg": 15px,
+    "xl": 20px,
+    "xxl": 30px,
+);
+
+$fontSizes:(
+    "xs": 8px,
+    "sm": 12px,
+    "md": 16px,
+    "lg": 20px,
+    "xl": 24px,
+    "xxl": 28px
+);
+
+$textTransforms: uppercase, lowercase, capitalize, none, full-width, full-size-kana;
+$display: inline, inline-block, block, none, grid, flex, table, table-cell;
+$positions: static, relative, absolute, fixed, sticky;
+$alignItems: left, right, center;
+$alignContents: left, right, center, space-between, space-around, space-evenly;
+$justifyContents: left, right, center, space-between, space-around, space-evenly;
+$flexDirections: row, row-reverse, column, column-reverse;
+$flexWrap: wrap, nowrap, wrap-reverse;
+$textAligns: right, left, center, justify;
+$floats: left, right;
+$cursor: help, wait, pointer, crosshair, not-allowed, zoom-in, zoom-out, grab;

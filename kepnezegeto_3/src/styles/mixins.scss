@@ -1,0 +1,68 @@
+@mixin mapMixin($clsName, $map, $prop) {
+    @each $key, $value in $map {
+        #{$clsName}-#{$key} {
+            #{$prop}: $value!important;
+        }
+    }
+}
+
+@mixin listMixin($clsName, $list, $prop) {
+    @each $value in $list {
+        #{$clsName}-#{$value} {
+            #{prop}:$value!important;
+        }
+    }
+}
+
+@mixin loopMixin($from, $to, $step, $clsName, $prop, $unit) {
+    @while $from <= $to {
+        #{$clsName}-#{$from} {
+            #{$prop}: #{$from}#{$unit}!important;
+        }
+
+        $from:$from+$step;
+    }
+}
+
+/*
+:hover-nek csináljuk
+végigmegyünk benne a $color-ön 
+és azért kellett ezt egy mixin-ben megoldani, mert kell a prop is, hogy más legyen, mert csinálunk egyet a color-re meg egyet a background-color-re
+*/
+
+@mixin hoverMixin($clsName, $prop, $type:hover) {
+    @each $key, $value in $colors {
+        .#{$clsName}-#{$type}-#{$key}:#{$type} {
+            #{$prop}:$value!important;
+        }
+    }
+}
+
+/*
+settings-ben meghívjuk!
+Azért kell, hogy important legyen, hogy biztos, hogy felülírja
+és az is nagyon fontos, hogy :hover-je legyen ilyen, de viszont ezt meg is lehetne úgy csinálni, hogy ez a mixin vár még a clsName meg a prop
+mellé egy type-ot, ami az lesz, hogy hover vagy active ezt majd meg tudjuk adni amit akarunk 
+@mixin hoverMixin($clsName, $prop, $type:hover)
+beleégetjük, hogy a type az alapból :hover legyen, szóval meghívásnál ezt nem kell megadni, csak akkor ha valami mást akarunk, mint :hover 
+pl. :active-ot vagy :focus az input mezőknél ha belekattintunk 
+
+@include hoverMixin("c", color);
+@include hoverMixin("b", background-color);
+
+@include hoverMixin("c", color, active);
+@include hoverMixin("b", background-color, active);
+
+ez lesz a végső megoldás
+-> 
+@mixin hoverMixin($clsName, $prop, $type:hover) {
+    @each $key, $value in $colors {
+        .#{$clsName}-#{$type}-#{$key}:#{$type} {
+            #{$prop}:$value!important;
+        }
+    }
+}
+
+<div className="color-white font-xxl cursor-pointer c-hover-secondary-lighter">
+így tudjuk majd felhasználni!!! 
+*/

@@ -1,0 +1,179 @@
+/*
+nagyon fontos, hogy amit csináltunk @mixin-eket azt az @include-val kell meghívni és megadni nekik, amiket várnak!!! 
+*/
+
+@include mapMixin($colors, "color", color);
+@include mapMixin($colors, "bg", background-color);
+@include mapMixin($spacings, "m", margin);
+@include mapMixin($spacings, "ml", margin-left);
+@include mapMixin($spacings, "mr", margin-right);
+@include mapMixin($spacings, "mt", margin-top);
+@include mapMixin($spacings, "mb", margin-bottom);
+@include mapMixin($spacings, "p", padding);
+@include mapMixin($spacings, "pl", padding-left);
+@include mapMixin($spacings, "pr", padding-right);
+@include mapMixin($spacings, "pt", padding-top);
+@include mapMixin($spacings, "pb", padding-bottom);
+@include mapMixin($fontSizes, "font", font-size);
+
+@include listMixin($textTransforms, "transform", text-transform);
+@include listMixin($displays, "d", display);
+@include listMixin($positions, "pos", position);
+@include listMixin($textAligns, "text", text-align);
+@include listMixin($floats, "float", float);
+@include listMixin($floats, "clear", clear);
+@include listMixin($cursors, "cursor", cursor);
+
+@include loopMixin(1, 100, 1, "vh", height, vh);
+@include loopMixin(1, 100, 1, "vw", width, vw);
+@include loopMixin(10, 500, 10, "height", height, px);
+@include loopMixin(5, 100, 5, "widthp", width, "%");
+@include loopMixin(10, 500, 10, "maxw", max-width, px);
+
+@include hoverMixin("c", color);
+@include hoverMixin("b", background-color);
+
+@include hoverMixin("c", color, active);
+@include hoverMixin("b", background-color, active);
+
+.container-xl {
+    width:map-get($sizes, "xl");
+
+    @media screen and (max-width:map-get($sizes, "xl")) {
+        width:map-get($sizes, "lg");
+    }
+
+    @media screen and (max-width:map-get($sizes, "lg")) {
+        width:map-get($sizes, "md");
+    }
+
+    @media screen and (max-width:map-get($sizes, "md")) {
+        width:map-get($sizes, "sm");
+    }
+
+    @media screen and (max-width:map-get($sizes, "sm")) {
+        width:100%;
+    }
+}
+
+.container-lg {
+    width:map-get($sizes, "lg");
+
+    @media screen and (max-width:map-get($sizes, "lg")) {
+        width:map-get($sizes, "md");
+    }
+
+    @media screen and (max-width:map-get($sizes, "md")) {
+        width:map-get($sizes, "sm");
+    }
+
+    @media screen and (max-width:map-get($sizes, "sm")) {
+        width:100%;
+    }
+}
+
+.container-md {
+    width:map-get($sizes, "md");
+
+    @media screen and (max-width:map-get($sizes, "md")) {
+        width:map-get($sizes, "sm");
+    }
+
+    @media screen and (max-width:map-get($sizes, "sm")) {
+        width:100%;
+    }
+}
+
+.container-sm {
+    width:map-get($sizes, "sm");
+
+    @media screen and (max-width:map-get($sizes, "sm")) {
+        width:100%;
+    }
+}
+
+/*
+itt csinálunk majd ilyen each-eket hasonlóan, mint pl. a listMixin-ben, csak itt még lesz valami extra dolog amiért ott nem lehet ezt megcsinálni
+pl. itt az elsőben ott lesz egy media query, ami miatt meg kell ezt így csinálni!! 
+*/
+
+@each $float in $floats {
+    .float-#{$float} {
+        float: $float;
+    }
+
+    @media screen and (max-width: map-get($sizes, "xs")) {
+        float: none;
+        clear: both;
+        margin: 10px auto!important;
+    }
+}
+
+/*
+A legkisebbnél már nem nézett ki jól, hogy float-os volt, ezért a legkisebb max-width-en itt a float az none lesz illetve, ami még nagyon 
+fontos, hogy kell a clear: both is!!!! 
+*/
+
+.margin-x-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.clear {
+    clear: both;
+}
+
+/*
+Itt se tudjuk megcsinálni a mixin-es függvénnyel, mert két dolgot csinálunk border és background-color 
+*/
+
+@each $key, $value in $colors {
+    .box-#{$key} {
+        border: 1px solid darken($value, 10%);
+        background-color: $value;
+    }
+}
+
+/*
+for-val is lehet csinálni dolgokat, csak annyi, hasonló mint a while a loopMixin-ben 
+és itt mindenhova az i-t adjuk meg hasonlóan, mint ott is a from-ot!! 
+
+tehát a loopMixin jó height-ra meg width-re leginkább 
+*/
+
+@for $i from 5 through 50 {
+    .mx-#{$i} {
+        margin-left: #{$i}px; 
+        margin-right: #{$i}px; 
+    }
+
+    .my-#{$i} {
+        margin-top: #{$i}px;
+        margin-bottom: #{$i}px;
+    }
+}
+
+@each $key, $value in $sizes {
+    .container-#{$key} {
+        margin:auto;
+    }
+}
+
+//itt megcsináljuk a border-t 
+@each $key, $value in $colors {
+    .border-#{$key} {
+        border: 1px solid #{$value};
+    }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 10px 0;
+}
+
+.img-holder img {
+    width: 100%;
+}
+
+.bold {
+    font-weight: bold;
+}

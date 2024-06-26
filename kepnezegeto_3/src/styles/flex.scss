@@ -1,0 +1,5 @@
+@include listMixin($alignItems, "ai", align-items);
+@include listMixin($alignContents, "ac", align-content);
+@include listMixin($justifyContents, "jc", justify-content);
+@include listMixin($flexDirections, "flex-dir", flex-direction);
+@include listMixin($flexWrap, "flex-wrap", flex-wrap);

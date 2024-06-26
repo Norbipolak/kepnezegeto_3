@@ -1,0 +1,443 @@
+/*
+ide importáljuk be az összes scss file-t, majd az App-ben ezt a style.scss-t fogjuk importálni és így lefordítás nélkül lehet majd 
+dolgozni velük!!! 
+*/
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import "variables.scss";
+@import "mixins.scss";
+@import "init.scss";
+@import "settings.scss";
+@import "grid.scss";
+@import "flex.scss";
+@import "inputs.scss";
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Nunito", sans-serif;
+    margin: 10px 0;
+}
+
+h1 {
+    color: map-get($colors, "primary");
+}
+
+h2 {
+    color: map-get($colors, "primary-lighter");
+}
+
+h3 {
+    color: map-get($colors, "secondary-darker");
+}
+
+h4 {
+    color: map-get($colors, "secondary");
+}
+
+h5 {
+    color: map-get($colors, "dark-grey");
+}
+
+h6 {
+    color: map-get($colors, "mid-grey");
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+}
+
+nav {
+    height: 80px;
+    background-color: map-get($colors, "primary");
+    position: sticky;
+    top: 0;
+    transition: all .5s ease; 
+    z-index: 1000;
+
+    ul {
+        display: flex; 
+        justify-content: center;
+    }
+
+    li {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 80px;
+        &:hover {
+            background-color: map-get($colors, "secondary");
+        }
+    }
+
+    a {
+        text-decoration: none;
+        color: white!important;
+        padding: 15px;
+    }
+}
+
+header {
+    height: 350px;
+    background-image: url(../images/header.jpg);
+    background-size: 100%;
+    background-position: center;
+}
+
+.transparent {
+    background-color: #5d5f71bc; /*ez a primary-color a $color-ban!*/
+}
+
+.shadow {
+    box-shadow: 0px 0px 4px map-get($colors, "dark-grey");
+}
+
+.selected-menu {
+    background-color: map-get($colors, "secondary");
+}
+
+.loading-component {
+    position: relative;
+    text-align: center;
+}
+
+.loading-holder {
+    position: relative;
+    background-color: map-get($colors, "light-grey");
+    height: 10px;
+}
+
+.loading-line {
+    position: absolute;
+    background-color: map-get($colors, "primary");
+    height: 10px; 
+    /*
+    fontos, hogy ugyanolyan magas legyen, mint a loading-holder a szélességet, pedig majd megadjuk a styles:{{ width: "80px"}}
+    mondjuk így a jsx elemnél 
+
+    azt szeretnénk, hogy balra igazodjon, amin rajta van, tehát a loading-holder-re, meg, hogy alul és felül is igazodjon 
+    */
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+/*
+Itt nagyon fontos, hogy kell a position: fixed, mert ilyenkor ez az elem nem fog menni, mikor húzzuk lefele a képernyőt 
+ilyen modal dolgoknál ez fontos, hogy position: fixed legyen
+*/
+
+.modal-img {
+    width: 100%;
+    /*
+    100%-a lesz a szélessége ennek az elemnek a parent-jához, képest, mivel ez egy position: fixed, ezért 100vw fog felvenni 
+    tehát a látható képernyő szélességének 100%-át  
+    */
+    height: 100%;
+    /*
+    ugyanaz, mint a width-nél, mivel itt position: fixed van, ezért felveszi a 100vh-ot, a teljes látható képernyő 100%-os magassága 
+    */
+    position: fixed;
+    /*
+    a viewport-hoz képest ez az elem fix lesz, tehát ha megyünk lefele az oldalon ez nem fog elmozdulni!!!!!!!!!!!!!!
+    */
+    left: 0;
+    /*
+    a parent, tehát, amiben benne van, annak a bal szélétől 0px-re lesz!! ebben az esetben, mivel fixed ez a viewportnak a bal oldala lesz!! 
+    és ugyanígy a top, bottom, right!! 
+    */
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    /*
+    nagyon fontos itt ez a margin: auto, mert együtt a left, right, top, bottom 0-val ez horizontálisan és vertikálisan is középre helyezi az 
+    elemet amiben benne van!!! 
+    Ez nagyon fontos, hogy együtt müköduk ez a top, bottom, left, right: 0 és a margin: auto!!!! 
+    */
+    background-color: rgba(0,0,0,0.7);
+    /*
+    Ez a 0,0,0 ez black és az rgba-ban az a, azzal tudjuk beállítani az opcatity-t, ami jelen esetben 0.7 opacity lesz!! 
+    */
+    /*
+    Következőkkel meg beállítjuk a child elemeket, amik benne lesznek ebbe a modal-img-ben horizontálisan és vertikálisan is középre!!! 
+    */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*
+itt lesz még egy div, amiben majd benne lesz a képünk 
+ez azért lesz position: relative, mert majd lesz egy x gomb -> modal-x, ami majd ezen lesz rajta!!! 
+width: 80% meg azért, hogy ennyit takarjon el a modal-img-ből a kép majd!!!
+*/
+
+.modal-img-holder {
+    position: relative;
+    width: 80%;
+}
+
+/*
+itt meg ha van egy img egy div-ben, akkor mindig, hogy annak a 100%-t vegye fel!!! 
+*/
+
+.modal-img-holder img {
+    width: 100%;
+}
+
+.modal-x {
+    /*
+    Ez meg rajta lesz a modal-img-holder-en, ezért kell a position: absolute meg azt akarjuk, hogy jobb felül legyen, ezért a top-tól 
+    eltávolodik csak 20px-t meg a right-tól is ugyanennyit!!! 
+    */
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 25px;
+    color: map-get($colors, "danger");
+    cursor: pointer;
+}
+
+a:link {
+    color: map-get($colors, "secondary");
+
+}
+
+a:visited {
+    color: map-get($colors, "secondary-darker");
+}
+
+.hiding {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: black;
+}
+
+/*
+hogy ez a Nunito font-family az ne csak a h-s tag-eken legyen, hanem legyen neki egy külön class, amit majd annak adunk meg aminek akarunk
+*/
+
+.nunito-font {
+    font-family: "Nunito", sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.fa-icon-holder {
+    height: 30px;
+    overflow: hidden;
+}
+
+.fa-icon-holder:hover .upper-icon {
+    margin-top: -40px;
+}
+
+/*
+Itt az volt a problémánk, hogy ha nem hover, akkor nem megy vissza olyan szépen transition-vel 
+de viszont van egy olyan pseudo osztály, hogy :not és ott ha megadjuk, hogy :not(:hover) 
+akkor vissza megy az eredeti helyére 
+*/
+
+.fa-icon-holder .upper-icon, .fa-icon-holder .lower-icon {
+    transition: margin-top 1s ease;
+}
+/*
+ezek a transitionök meg a .fa-icon-holder-en belüli .upper-icon illetve a .lower-icon-ra kell vonatkoztatni
+*/
+
+/*
+és akkor itt megadjuk neki, hogy menjen vissza nullára a 40px-ről, ez nagyon jó ez a :not, 
+mert különben ezt csak classlist-ekkel lehetne megoldani
+*/
+.fa-icon-holder:not(:hover) .upper-icon {
+    margin-top: 0;
+}
+/*
+és nem csak ilyen not:(:hover) van ha létetzik ez a focus-ra, active és az összes pseudo osztályokra is meg lehet oldani 
+tehát van egy ilyen pseudo osztály, hogy :not() és ez más pseudo osztályokat vár, fogad!!! 
+*/
+
+.loading-icon {
+    height: 150px;
+    width: 150px;
+    // background-image: url("../images/loading-icon.gif");
+    background-position: center;
+    background-size: 150px; // vagy meg lehet adni így vagy úgy, hogy 100%, de ez nincsen benne semmilyen div-ben, ezért így adtuk meg 
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+/*gallery-project-hez*/
+.img-gallery {
+    max-width: map-get($sizes, "lg");
+    margin: 15px auto;
+    height: 720px;
+    border: 2px solid map-get($colors, "secondary");
+    position: relative;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        user-select: none;
+    }
+}
+
+img{
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+%icon {
+    //ebbe összegyüjtjük a közös tulajdonságokat 
+    width: 40px;
+    height: 40px;
+    //fontos, hogy a font-size is annyi legyen, mint a width meg height, mert akkor akkora lesz az ikon!! 
+    font-size: 40px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto; 
+    /*hogy vertikálisan középen legyen*/
+    color: map-get($colors, "secondary-lighter");
+    cursor: pointer;
+}
+
+.left-icon {
+    @extend %icon;
+    left: 10px;
+}
+
+.right-icon {
+    @extend %icon;
+    right: 10px;
+}
+
+.left-100p {
+    left: -100%;
+}
+
+.right-100p {
+    right: -100px;
+}
+
+@keyframes setToCurrentForward {
+    from {left: -100%;}
+    to {left: 0;}
+}
+
+@keyframes setToPreviousForward {
+    from {left: 0;}
+    to {left: 100%;}
+}
+
+@keyframes setToCurrentBackward {
+    from {left: 100%;}
+    to {left: 0;}
+}
+
+@keyframes setToPreviousBackward {
+    from {left: 0;}
+    to {left: -100%;}
+}
+
+.current-image-forward {
+    animation-name: setToCurrentForward;
+    animation-duration: 0.9s;
+    //margin-left: 0;
+    left: 0;
+}
+
+.prev-image-forward {
+    animation-name: setToPreviousForward;
+    animation-duration: 0.9s;
+    //margin-left: 1076px;
+    left: 100%;
+}
+
+.current-image-backward {
+    animation-name: setToCurrentBackward;
+    animation-duration: 0.9s;
+    left: 100%;
+}
+
+.prev-image-backward {
+    animation-name: setToPreviousBackward;
+    animation-duration: 0.9s;
+    left: 0;
+}
+
+.img-counter {
+    width: 110px;
+    //itt nem is adunk meg egy height-ot inkább kap helyette egy padding-et 
+    padding: 5px;
+    text-align: center;
+    background-color: rgba(255,255, 255, 0.8);
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    bottom: 15px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.point {
+    background-color: rgba(72, 72, 72, 0.7);
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    //ha akkora a radius, mint a width meg a height, akkor lesz ez egy kör!!!
+    cursor: pointer; 
+}
+
+.title-holder {
+    background-color: rgba(0, 0, 0, 0.645);
+    color: white;
+    width: 100%;
+    top: 0;
+    left: 0;
+    //kap egy left: 0 meg top:0 hogy biztos, hogy ott legyen felül!
+    padding: 5px;
+    position: absolute;
+    z-index: 1; //mert alapból bent van a kép alatt 
+    text-align: center;
+    transition: all 0.4s ease;
+}
+
+.hide-show-title {
+    position: absolute;
+    top: 32px;
+    background-color: rgba(0, 0, 0, 0.645);
+    color: white;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 20px; //lesz neki egy width-je, hogy ez ne a 100%-ot vegye fel, hanem csak 20px-es lesz 
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.4s ease;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    //ezzel meg az alsó radius-t lehet beállítani!!! 
+    font-size: 12px;
+    //ezzel tudjuk beállítani, hogy kisebb legyen az egész, mert nincs megadva semmi height, szóval ennek a font-size-ja fogja meghatározni 
+    //hogy milyen magas legyen az egész 
+}
+
+
+
+
+
